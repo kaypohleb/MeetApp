@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">MeetApp</string>
+    <string name="fab_contentdes">addEvent</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="button_accept">accept</string>
+    <string name="button_reject">reject</string>
+    <string name="button_choose">choose dates</string>
+    <string name="loading_event">creating your event</string>
+    <string name="loading_invitees">sending your invites</string>
+    <string name="loading_schedule">uploading your schedule</string>
+
+    <string name="menu_profile">profile</string>
+    <string name="menu_incoming">incoming</string>
+    <string name="menu_outgoing">outgoing</string>
+    <string name="menu_confirmed">confirmed</string>
+
+    <string name="button_register">REGISTER</string>
+    <string name="button_invite">invite</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_confirm">You have no confirmed events.</string>
+    <string name="empty_invited">You have no invited events.</string>
+    <string name="empty_organized">You have not organized any events.</string>
+
+    <!-- APICALL POST URLS -->
+    <string name="api_post_register">https://t-bounty-249014.appspot.com/user/register</string>
+    <string name="api_post_new_event">https://t-bounty-249014.appspot.com/events/insert</string>
+    <string name="api_post_schedule">https://t-bounty-249014.appspot.com/busytime/insert</string>
+    <string name="api_post_new_invitees">https://t-bounty-249014.appspot.com/invite/insert</string>
+    <string name="api_post_poll">https://t-bounty-249014.appspot.com/poll/date/insert</string>
+    <string name="api_post_choice">https://t-bounty-249014.appspot.com/poll/vote/insert</string>
+
+    <!-- APICALL PUT URLS -->
+    <string name="api_put_update_events">https://t-bounty-249014.appspot.com/events/put</string>
+    <string name="api_put_update_invitees">https://t-bounty-249014.appspot.com/invite/put</string>
+
+
+    <!-- APICALL GET URLS -->
+    <string name="api_get_friends">https://t-bounty-249014.appspot.com/user/friends/</string>
+    <string name="api_get_login">https://t-bounty-249014.appspot.com/user/login/</string>
+    <string name="api_get_organized">https://t-bounty-249014.appspot.com/events/organized/</string>
+    <string name="api_get_invited">https://t-bounty-249014.appspot.com/events/invited/</string>
+    <string name="api_get_confirmed">https://t-bounty-249014.appspot.com/events/confirm/</string>
+    <string name="api_get_par_busytime">https://t-bounty-249014.appspot.com/busytime/participants/</string>
+    <string name="api_get_user_busyime">https://t-bounty-249014.appspot.com/busytime/user/</string>
+    <string name="api_get_invitees">https://t-bounty-249014.appspot.com/invite/get/</string>
+    <string name="api_get_poll_organizer">https://t-bounty-249014.appspot.com/poll/organizer/</string>
+    <string name="api_get_vote_details">https://t-bounty-249014.appspot.com/poll/voting/details/</string>
+    <string name="api_get_event_participants">https://t-bounty-249014.appspot.com/poll/participant/</string>
+
+    <string name="meeting_dialog_header">Meeting Details</string>
+    <string name="meeting_dialog_title">Title:</string>
+    <string name="meeting_dialog_date">Start Date</string>
+    <string name="meeting_dialog_to"> To: </string>
+    <string name="meeting_dialog_end">End Date</string>
+    <string name="meeting_dialog_details">Details:</string>
+    <string name="meeting_dialog_nextbtn">NEXT</string>
+    <string name="meeting_dialog_backbtn">BACK</string>
+
+</resources>

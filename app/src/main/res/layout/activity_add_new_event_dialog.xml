@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txt_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/meeting_dialog_header"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:textStyle="bold"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/meeting_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/meeting_dialog_title"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/fromDateEditText"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/meeting_dialog_date"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meeting_dialog_to">
+            </TextView>
+            <EditText
+                android:id="@+id/toDateEditText"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/meeting_dialog_end"/>
+        </LinearLayout>
+            <EditText
+                android:id="@+id/meeting_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType = "numberPassword"
+                android:hint="Duration: How long(in Hrs)"/>
+
+            <EditText
+                android:id="@+id/meeting_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Details"/>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@android:color/white"
+            android:clickable="true"
+            android:text="@string/meeting_dialog_backbtn"
+            android:textColor="#5DBCD2"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/white"
+            android:clickable="true"
+            android:text="@string/meeting_dialog_nextbtn"
+            android:textColor="#5DBCD2"
+            android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

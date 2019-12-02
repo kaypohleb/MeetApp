@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_profile">
+
+
+
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.meetapp.ui.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/nav_incoming"
+        android:name="com.example.meetapp.ui.IncomingFragment"
+        android:label="@string/menu_incoming"
+        tools:layout="@layout/fragment_incoming" />
+
+    <fragment
+        android:id="@+id/nav_outgoing"
+        android:name="com.example.meetapp.ui.OrganizedFragment"
+        android:label="@string/menu_outgoing"
+        tools:layout="@layout/fragment_organized" />
+
+    <fragment
+        android:id="@+id/nav_confirmed"
+        android:name="com.example.meetapp.ui.ConfimedFragment"
+        android:label="@string/menu_confirmed"
+        tools:layout="@layout/fragment_confimed" />
+
+
+</navigation>
