@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:id="@+id/details_dialog"
     android:orientation="horizontal"
-    android:layout_margin="@dimen/fab_margin">
+    android:layout_margin="@dimen/fab_margin"
+    android:background="@drawable/dialog_round">
 
     <LinearLayout
         android:layout_width="wrap_content"

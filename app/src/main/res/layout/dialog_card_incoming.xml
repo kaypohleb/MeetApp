@@ -4,11 +4,14 @@
     android:layout_height="match_parent"
     android:id="@+id/details_dialog"
     android:orientation="vertical"
-    android:layout_margin="@dimen/fab_margin">
+    android:layout_margin="@dimen/fab_margin"
+    android:background="@drawable/dialog_round">
 
     <TextView
         android:id="@+id/details_title"
+        android:fontFamily="@font/productsans_bold"
         android:layout_width="match_parent"
+        android:textSize="18sp"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/details_date"
@@ -16,17 +19,29 @@
         android:layout_height="wrap_content"/>
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
         <Button
             android:id="@+id/reject_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:fontFamily="@font/productsans_bold"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_round_gradient"
+            android:backgroundTint="@color/red"
             android:text="@string/button_reject"/>
         <Button
             android:id="@+id/accept_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:fontFamily="@font/productsans_bold"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_round_gradient"
+            android:backgroundTint="@color/colorMiddle"
             android:text="@string/button_accept"/>
     </LinearLayout>
 

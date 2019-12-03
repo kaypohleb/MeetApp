@@ -18,7 +18,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, CalendarFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
+        CalendarFragment.OnFragmentInteractionListener {
     public GoogleSignInOptions gso;
     FloatingActionButton fab;
     BottomNavigationView navView;

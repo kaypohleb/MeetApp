@@ -4,6 +4,8 @@ package com.example.meetapp.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -131,7 +134,7 @@ public class OrganizedFragment extends Fragment {
 
             organizedDialog = new Dialog(context);
             organizedDialog.setContentView(R.layout.dialog_card_organized);
-
+            organizedDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             viewHolder.overall_organizedcv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -197,7 +200,7 @@ public class OrganizedFragment extends Fragment {
         }
     }
     class OrganizedHolder extends RecyclerView.ViewHolder {
-        private TextView event_txt, date_txt, duration_txt, location_txt;
+        private TextView event_txt, date_txt, location_txt,status_txt;
         private CardView overall_organizedcv;
 
 
@@ -205,19 +208,31 @@ public class OrganizedFragment extends Fragment {
             super(itemView);
             event_txt = itemView.findViewById(R.id.eventName_tv);
             date_txt = itemView.findViewById(R.id.date_tv);
-            duration_txt = itemView.findViewById(R.id.duration_tv);
+            status_txt = itemView.findViewById(R.id.eventStatus_tv);
             location_txt = itemView.findViewById(R.id.location_tv);
             overall_organizedcv = itemView.findViewById(R.id.organizing_cv);
 
         }
 
 
-        void setDetails(OrganizedDetails OrganizedDetails) {
-            event_txt.setText(OrganizedDetails.event_name);
-            date_txt.setText(OrganizedDetails.date_from);
-            duration_txt.setText(OrganizedDetails.duration);
-            location_txt.setText(OrganizedDetails.location);
+        void setDetails(OrganizedDetails organizedDetails) {
+            event_txt.setText(organizedDetails.event_name);
+            date_txt.setText(organizedDetails.getDate_from()+" - "+organizedDetails.getDate_to());
+            String status;
+            switch (Integer.valueOf(organizedDetails.getStatus())){
+                case 0:
+                    status = getString(R.string.status_invited);
+                    break;
+                case 1:
+                    status = getString(R.string.status_polling);
+                    break;
+                default :
+                    status="";
+                    break;
 
+            }
+            status_txt.setText(status);
+            location_txt.setText(organizedDetails.location);
 
         }
     }
@@ -230,6 +245,7 @@ public class OrganizedFragment extends Fragment {
         private String description;
         private String duration;
         private String location;
+        private String status;
 
         public String getEvent_name() {
             return event_name;
@@ -257,6 +273,10 @@ public class OrganizedFragment extends Fragment {
 
         public String getLocation() {
             return location;
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 

@@ -9,6 +9,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_invite"
         android:layout_width="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_height="wrap_content"
         android:layout_above="@id/invite_button">
 
@@ -26,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_invite"
+        android:fontFamily="@font/productsans_bold"
+        android:background="@drawable/button_round_gradient"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

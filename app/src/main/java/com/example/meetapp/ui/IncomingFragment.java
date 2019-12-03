@@ -4,6 +4,8 @@ package com.example.meetapp.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -93,7 +95,8 @@ public class IncomingFragment extends Fragment {
     }
     private void getDetails(Context context, String s){
         RequestQueue queue = Volley.newRequestQueue(context);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, s+Credentials.getId(), null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                s+Credentials.getId(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d("Response", response.toString());
@@ -175,6 +178,7 @@ public class IncomingFragment extends Fragment {
 
             incomingDialog = new Dialog(context);
             incomingDialog.setContentView(R.layout.dialog_card_incoming);
+            incomingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             viewHolder.overall_incomingcv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -232,22 +236,39 @@ public class IncomingFragment extends Fragment {
     }
     class IncomingHolder extends RecyclerView.ViewHolder {
 
-        private TextView event_txt, date_txt, duration_txt, location_txt;
+        private TextView event_txt, date_txt, status_txt,location_txt;
         private CardView overall_incomingcv;
         IncomingHolder(View itemView) {
             super(itemView);
             event_txt = itemView.findViewById(R.id.eventName_tv);
             date_txt = itemView.findViewById(R.id.date_tv);
-            duration_txt = itemView.findViewById(R.id.duration_tv);
+            status_txt = itemView.findViewById(R.id.eventStatus_tv);
             location_txt = itemView.findViewById(R.id.location_tv);
             overall_incomingcv = itemView.findViewById(R.id.incoming_cv);
         }
 
         void setDetails(IncomingDetails incomingDetails) {
             event_txt.setText(incomingDetails.getEvent_name());
-            date_txt.setText(incomingDetails.getDate_from());
-            duration_txt.setText(incomingDetails.getDuration());
+            date_txt.setText(incomingDetails.getDate_from()+" - "+incomingDetails.getDate_to());
             location_txt.setText(incomingDetails.getLocation());
+            String status;
+            switch (Integer.valueOf(incomingDetails.getStatus())){
+                case 0:
+                    status = getString(R.string.status_rejected);
+                    break;
+                case 1:
+                    status = getString(R.string.status_accepted);
+                    break;
+                case 2:
+                    status = getString(R.string.status_pending);
+                    break;
+                default :
+                    status="";
+                    break;
+
+            }
+            status_txt.setText(status);
+
         }
     }
     public class IncomingDetails {
@@ -301,8 +322,13 @@ public class IncomingFragment extends Fragment {
         public String getUser_id() {
             return user_id;
         }
+
         public String getInvite_id(){
             return invite_id;
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 }

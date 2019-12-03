@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:id="@+id/details_dialog"
     android:orientation="vertical"
-    android:layout_margin="@dimen/fab_margin">
+    android:layout_margin="@dimen/fab_margin"
+    android:background="@drawable/dialog_round">
 
     <TextView
         android:layout_width="match_parent"

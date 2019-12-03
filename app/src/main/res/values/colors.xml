@@ -3,6 +3,11 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorPrimaryDarker">#004138</color>
-    <color name="colorMiddle">#52746C</color>
+    <color name="colorMiddle">#7DC9B8</color>
     <color name="white">#fff</color>
+    <color name="invited">#E09200</color>
+    <color name="polling">#0394A7</color>
+    <color name="red">#C90606</color>
+    <color name="transparent">#00FFFFFF</color>
+
 </resources>

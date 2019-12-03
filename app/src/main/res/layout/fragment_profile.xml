@@ -48,7 +48,8 @@
             android:text="Sign out"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round_green"
+            android:background="@drawable/button_round"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:textColor="#fff"/>
 
 

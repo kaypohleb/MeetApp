@@ -7,6 +7,12 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <!--STATUS-->
+    <string name="status_invited">Invited</string>
+    <string name="status_polling">Polling</string>
+    <string name="status_accepted">Accepted</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="status_pending">Pending</string>
 
     <string name="button_accept">accept</string>
     <string name="button_reject">reject</string>
@@ -15,10 +21,10 @@
     <string name="loading_invitees">sending your invites</string>
     <string name="loading_schedule">uploading your schedule</string>
 
-    <string name="menu_profile">profile</string>
-    <string name="menu_incoming">incoming</string>
-    <string name="menu_outgoing">outgoing</string>
-    <string name="menu_confirmed">confirmed</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_incoming">Incoming</string>
+    <string name="menu_outgoing">Outgoing</string>
+    <string name="menu_confirmed">Confirmed</string>
 
     <string name="button_register">REGISTER</string>
     <string name="button_invite">invite</string>
@@ -61,5 +67,7 @@
     <string name="meeting_dialog_details">Details:</string>
     <string name="meeting_dialog_nextbtn">NEXT</string>
     <string name="meeting_dialog_backbtn">BACK</string>
+
+    <string name="invite_activity_header">Invite People</string>
 
 </resources>
