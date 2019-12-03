@@ -211,6 +211,9 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
     @Override
     public void onItemClick(View view, int position) {
         Dialog mDialog = new Dialog(this);
+        mDialog.setContentView(R.layout.dialog_choose_timing);
+        mDialog.setCanceledOnTouchOutside(true);
+        mDialog.setCancelable(true);
         String[] current  = adapter.getItem(position).toString().replace("\n"," ").split(",");
         Log.d("currentclick", Arrays.toString(current));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -233,6 +236,14 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
             e.printStackTrace();
         }
 
+        RecyclerView rvTimes = (RecyclerView) mDialog.findViewById(R.id.timing_rv);
+        rvTimes.setHasFixedSize(true);
+        rvTimes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //rvTest.addItemDecoration(new SimpleDividerItemDecoration(context, R.drawable.divider));
+
+        //DataDialogAdapter rvAdapter = new DataDialogAdapter(context, rvTestList);
+        //rvTest.setAdapter(rvAdapter);
+        mDialog.show();
 
 
 
