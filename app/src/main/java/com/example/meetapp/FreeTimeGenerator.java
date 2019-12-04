@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -13,8 +18,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.meetapp.utility.AvailableTimes;
+import com.example.meetapp.utility.SelectedTiming;
 import com.example.meetapp.utility.TimeSlot;
+import com.example.meetapp.utility.TimingAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,18 +50,45 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
     ArrayList<TimeSlot> freeTimes;
     suggestedTimesRecyclerViewAdapter adapter;
     RecyclerView suggestedTimesRecyclerView;
+    TextView selectedTime;
+    Button confirmPoll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_time_generated);
         Intent intent = getIntent();
         rParticipants = new JSONArray();
+        new SelectedTiming();
         suggestedTimesRecyclerView = findViewById(R.id.suggested_times_rv);
         event_id = intent.getStringExtra("event_id");
         duration = intent.getStringExtra("duration");
         date_to = intent.getStringExtra("date_to");
         date_from = intent.getStringExtra("date_from");
         Log.d("event_id",event_id);
+        selectedTime = findViewById(R.id.selectTimes_tv);
+        confirmPoll = findViewById(R.id.btn_pollConfirm);
+        confirmPoll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selSum = SelectedTiming.getTimingSelected().size();
+                if(selSum==0){
+                    Toast.makeText(getApplicationContext(),"Please Select at least one timing", Toast.LENGTH_SHORT).show();
+                }else{
+                    if(selSum==1) {
+                        String confirmDate = SelectedTiming.getTimingSelected().get(0)[0];
+                        Log.d("Confirm", confirmDate);
+                        setConfirm(getApplicationContext(), event_id, 2, confirmDate);
+                    }else{
+                        setConfirm(getApplicationContext(),event_id,1,null);
+                        for(String[] pos : SelectedTiming.getTimingSelected()){
+                            String date = pos[0];
+                            Log.d("Polling",date);
+                        }
+                        setPoll(getApplicationContext(),event_id,SelectedTiming.getTimingSelected());
+                    }
+                }
+            }
+        });
         getDetails(FreeTimeGenerator.this,getString(R.string.api_get_par_busytime),event_id);
     }
     private void getDetails(Context context, String url,String event_id){
@@ -78,6 +114,64 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
         // Access the RequestQueue through your singleton class.
         queue.add(jsonObjectRequest);
 
+    }
+    private void setConfirm(Context context, String event_id,int status, String confirmdatetime){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("event_id",event_id);
+            JSONObject jsonObject1 = new JSONObject();
+            if(confirmdatetime!=null){
+                jsonObject1.put("confirm_date",confirmdatetime);
+            }
+            jsonObject1.put("status",String.valueOf(status));
+            jsonObject.put("data",jsonObject1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT,
+                getString(R.string.api_put_update_events), jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Response", response.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error", error.toString());
+            }
+        });
+        queue.add(jsonObjectRequest);
+    }
+
+    private void setPoll(Context context, String event_id,ArrayList<String[]> pollDates){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("event_id",event_id);
+            JSONArray jsonArray = new JSONArray();
+            for(String[]  date:pollDates){
+                jsonArray.put(date[0]);
+            }
+            jsonObject.put("dates",jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                getString(R.string.api_post_poll), jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Response", response.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error", error.toString());
+            }
+        });
+        queue.add(jsonObjectRequest);
     }
     public ArrayList<TimeSlot> generateFreeTimes(){
 
@@ -210,13 +304,14 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
     }
     @Override
     public void onItemClick(View view, int position) {
-        Dialog mDialog = new Dialog(this);
+        final Dialog mDialog = new Dialog(this);
         mDialog.setContentView(R.layout.dialog_choose_timing);
         mDialog.setCanceledOnTouchOutside(true);
         mDialog.setCancelable(true);
         String[] current  = adapter.getItem(position).toString().replace("\n"," ").split(",");
         Log.d("currentclick", Arrays.toString(current));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        ArrayList<String> timings = new ArrayList<>();
 
         Calendar start = Calendar.getInstance();
         Calendar eventend = Calendar.getInstance();
@@ -228,23 +323,52 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
             eventend.add(Calendar.HOUR,Integer.valueOf(duration));
 
             while( !start.after(end) && !eventend.after(end)){
-                Log.v("split timings",start.getTime().toString() +" , " + eventend.getTime().toString());
+                String event = sdf.format(start.getTime()) +"," + sdf.format(eventend.getTime());
+                Log.v("split timings", event);
+                timings.add(event);
                 start.add(Calendar.MINUTE, 30);
                 eventend.add(Calendar.MINUTE,30);
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        RecyclerView rvTimes = (RecyclerView) mDialog.findViewById(R.id.timing_rv);
+        new AvailableTimes(timings);
+        final Spinner spinner = (Spinner)mDialog.findViewById(R.id.spinner_chooseDates);
+        final RecyclerView rvTimes = (RecyclerView) mDialog.findViewById(R.id.timing_rv);
         rvTimes.setHasFixedSize(true);
         rvTimes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //rvTest.addItemDecoration(new SimpleDividerItemDecoration(context, R.drawable.divider));
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, AvailableTimes.dates);
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String dateSelected = AvailableTimes.dates.get(position);
+                rvTimes.setAdapter(new TimingAdapter(getApplicationContext(), AvailableTimes.getTimings(dateSelected)));
+            }
 
-        //DataDialogAdapter rvAdapter = new DataDialogAdapter(context, rvTestList);
-        //rvTest.setAdapter(rvAdapter);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d("Spinner","nothing selected");
+            }
+        });
+        spinner.setSelection(0);
+        Button accept = (Button)mDialog.findViewById(R.id.accept_btn);
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int sel = SelectedTiming.getTimingSelected().size();
+                selectedTime.setText(String.valueOf(sel)
+                        .concat(" Timing Selected"));
+                if(sel>1){
+                    confirmPoll.setText(getString(R.string.button_poll));
+                }else{
+                    confirmPoll.setText(getString(R.string.button_confirm));
+                }
+                mDialog.dismiss();
+
+            }
+        });
         mDialog.show();
-
 
 
     }
@@ -257,14 +381,6 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
         suggestedTimesRecyclerView.setAdapter(adapter);
     }
 
-    class Timing{
-        private String date;
-        private String timestart;
-        private String timeend;
-    }
-    class Schedules{
-        private String dateFrom;
-        private String dateTo;
-    }
+
 
 }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".InviteActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:layout_above="@id/invite_button">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_margin="15dp"
             android:layout_alignParentTop="true" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -28,7 +31,8 @@
         android:layout_height="wrap_content"
         android:text="@string/button_invite"
         android:fontFamily="@font/productsans_bold"
-        android:background="@drawable/button_round_gradient"
+        android:background="@drawable/button_round"
+        android:layout_margin="15dp"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

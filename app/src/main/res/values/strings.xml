@@ -14,20 +14,24 @@
     <string name="status_rejected">Rejected</string>
     <string name="status_pending">Pending</string>
 
-    <string name="button_accept">accept</string>
-    <string name="button_reject">reject</string>
-    <string name="button_choose">choose dates</string>
-    <string name="loading_event">creating your event</string>
-    <string name="loading_invitees">sending your invites</string>
-    <string name="loading_schedule">uploading your schedule</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_reject">Reject</string>
+    <string name="button_choose">Choose Dates</string>
+    <string name="button_poll">Poll</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_vote">Vote</string>
+
+    <string name="loading_event">Creating your event...</string>
+    <string name="loading_invitees">Sending out your invites...</string>
+    <string name="loading_schedule">Uploading your schedule...</string>
 
     <string name="menu_profile">Profile</string>
     <string name="menu_incoming">Incoming</string>
     <string name="menu_outgoing">Outgoing</string>
     <string name="menu_confirmed">Confirmed</string>
 
-    <string name="button_register">REGISTER</string>
-    <string name="button_invite">invite</string>
+    <string name="button_register">Register</string>
+    <string name="button_invite">Invite</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_confirm">You have no confirmed events.</string>
     <string name="empty_invited">You have no invited events.</string>
@@ -69,5 +73,7 @@
     <string name="meeting_dialog_backbtn">BACK</string>
 
     <string name="invite_activity_header">Invite People</string>
+
+    <string name="freeTime_default_selected">0 Timings Selected</string>
 
 </resources>

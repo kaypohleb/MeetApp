@@ -59,4 +59,5 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }
