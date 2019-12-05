@@ -180,9 +180,6 @@ public class SplashActivity extends AppCompatActivity {
             Credentials.setEmail(account.getEmail());
             Credentials.setProfilepic(account.getPhotoUrl());
             register();
-
-
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
         } catch (ApiException e) {
@@ -203,6 +200,9 @@ public class SplashActivity extends AppCompatActivity {
                         // response
                         Log.d("Response", response);
                         mProgress.dismiss();
+                        Intent i = new Intent(SplashActivity.this, IntroductionActivity.class);
+                        i.putExtra(MainActivity.TUTORIAL,false);
+                        startActivity(i);
                     }
                 },
                 new Response.ErrorListener() {
@@ -211,6 +211,7 @@ public class SplashActivity extends AppCompatActivity {
                         // error
                         Log.d("Error.Response", error.toString());
                         mProgress.dismiss();
+                        startActivity(new Intent(SplashActivity.this, IntroductionActivity.class));
 
                     }
                 }

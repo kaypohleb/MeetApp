@@ -29,7 +29,8 @@
         <activity
             android:name=".FreeTimeGenerator"
             android:theme="@style/AppTheme"/>
-
+        <activity android:name=".IntroductionActivity"
+            android:theme="@style/AppTheme.ActionBar.Transparent"/>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar"

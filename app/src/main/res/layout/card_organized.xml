@@ -25,6 +25,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:layout_height="wrap_content"
             android:padding="1dp"
+            android:text="@string/sample_eventName"
             android:textSize="18sp" />
         <TextView
             android:id="@+id/eventStatus_tv"
@@ -35,6 +36,7 @@
             android:textColor="@color/white"
             android:layout_height="match_parent"
             android:background="@drawable/button_round"
+            android:text="@string/sample_eventStatus"
             android:textSize="18sp"/>
         </LinearLayout>
         <LinearLayout
@@ -52,6 +54,7 @@
                 android:id="@+id/date_tv"
                 android:layout_width="0dp"
                 android:layout_weight="3"
+                android:text="@string/sample_eventTiming"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:textSize="10sp"

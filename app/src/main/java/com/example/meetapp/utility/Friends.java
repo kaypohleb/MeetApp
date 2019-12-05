@@ -68,6 +68,8 @@ public final class Friends {;
             @Override
             public void onResponse(JSONArray response) {
                 Log.d("Response", response.toString());
+
+
                 invitees = parseJSON(response.toString());
             }
         }, new Response.ErrorListener() {
@@ -78,6 +80,7 @@ public final class Friends {;
             }
         });
         queue.add(jsonArrayRequest);
+
     }
 
     public static ArrayList<Invitee> getInvitees() {
@@ -88,7 +91,7 @@ public final class Friends {;
         return user_name;
     }
 
-    private static ArrayList<Invitee> parseJSON(String jsonString) {
+    public static ArrayList<Invitee> parseJSON(String jsonString) {
         Gson gson = new Gson();
         Type type = new TypeToken<List<Invitee>>(){}.getType();
         ArrayList<Invitee> inviteList = gson.fromJson(jsonString, type);

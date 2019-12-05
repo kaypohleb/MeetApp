@@ -2,6 +2,7 @@ package com.example.meetapp.ui;
 
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -132,8 +133,6 @@ public class OrganizedFragment extends Fragment {
                     parent, false);
             final OrganizedHolder viewHolder = new OrganizedHolder(view);
 
-
-
             viewHolder.overall_organizedcv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,10 +141,7 @@ public class OrganizedFragment extends Fragment {
                     final OrganizedDetails current = allOrganizedDetails.get(viewHolder.getAdapterPosition());
                     if (current.getStatus().equals("0")) {
                         organizedDialog.setContentView(R.layout.dialog_card_organized);
-
-                        Friends.updateInviteList(getActivity(), getString(R.string.api_get_invitees),
-                                current.getEvent_id());
-
+                        Friends.updateInviteList(context,getString(R.string.api_get_invitees),current.getEvent_id());
                         TextView title = (TextView) organizedDialog.findViewById(R.id.details_title);
                         TextView date = (TextView) organizedDialog.findViewById(R.id.details_date);
                         title.setText(current.getEvent_name());
@@ -158,17 +154,31 @@ public class OrganizedFragment extends Fragment {
                             if (invitee.interest.equals("0")) {
                                 continue;
                             }
-                            TextView tv1 = new TextView(getActivity());
+                            Log.d("Friend",invitee.priority);
+                            LinearLayout ll = new LinearLayout(getActivity());
 
-                            tv1.setText(Friends.swapIdForName(invitee.user_id));
-                            tv1.setLayoutParams(new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            // Set the CardView layoutParams
+                            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT
+                            );
+                            params.setMargins(0,2,5,0);
+                            ll.setLayoutParams(params);
+                            ll.setPadding(5,5,5,5);
+                            ll.setElevation(6);
+                            ll.setBackground(getActivity().getDrawable(R.drawable.button_round_yellow));
+
+                            TextView tv = new TextView(getActivity());
+                            tv.setLayoutParams(params);
+                            tv.setText(Friends.swapIdForName(invitee.user_id));
                             if (invitee.interest.equals("1")) {
-                                tv1.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                                tv1.setTextColor(getResources().getColor(R.color.white));
+                                ll.setBackground(getActivity().getDrawable(R.drawable.button_round_green));
+                                tv.setTextColor(getResources().getColor(R.color.white));
                             }
-                            linearLayout.addView(tv1);
+                            ll.addView(tv);
+
+                            linearLayout.addView(ll);
+
                         }
                         Button choseButton = organizedDialog.findViewById(R.id.btn_date_suggest);
                         choseButton.setOnClickListener(new View.OnClickListener() {
@@ -183,15 +193,24 @@ public class OrganizedFragment extends Fragment {
                             }
 
                         });
-                    } else {
+                        organizedDialog.show();
+
+                        }
+                     else {
                         organizedDialog.setContentView(R.layout.dialog_card_organized);
+                        organizedDialog.show();
                     }
-                    organizedDialog.show();
+                    Log.d("Progress","show Dialog");
+
                 }
             }
 
             );
             return viewHolder;
+        }
+
+        public void setupInviteeResponse(Context context,final OrganizedDetails current){
+
         }
 
         @Override

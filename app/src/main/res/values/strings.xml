@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">MeetApp</string>
+    <string name="app_name">Meet</string>
+    <string name="app_description">Tired of waiting so long just to set a meeting?\n\nMeet is a
+        scheduler that helps you and your mates to get rid of this issue! Our special algorithm makes
+        use of your retrieved Google Calendar Schedules and suggests timings that you can confirm or
+        poll.</string>
+
     <string name="fab_contentdes">addEvent</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -14,12 +19,19 @@
     <string name="status_rejected">Rejected</string>
     <string name="status_pending">Pending</string>
 
+    <string name="sample_eventName">Event Name</string>
+    <string name="sample_eventStatus">Event Status</string>
+    <string name="sample_eventTiming">yyyy/MM/dd - yyyy/MM/dd</string>
+    <string name="sample_eventLocation">Location(Optional)</string>
+    <string name="sample_invitee">Invitee Name</string>
+
     <string name="button_accept">Accept</string>
     <string name="button_reject">Reject</string>
     <string name="button_choose">Choose Dates</string>
     <string name="button_poll">Poll</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_vote">Vote</string>
+    <string name="button_enter">Enter</string>
 
     <string name="loading_event">Creating your event...</string>
     <string name="loading_invitees">Sending out your invites...</string>

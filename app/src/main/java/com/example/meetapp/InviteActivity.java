@@ -61,8 +61,11 @@ public class InviteActivity extends AppCompatActivity {
         date_to = intent.getStringExtra(AddNewEventDialog.STRING_DATETO);
         details = intent.getStringExtra(AddNewEventDialog.STRING_DETAILS);
         selectedInvited =  new ArrayList<>();
+
         progressDialog = new ProgressDialog(InviteActivity.this);
         progressDialog.setTitle(R.string.loading_event);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
         getDetails(getApplicationContext(),getString(R.string.api_get_friends));
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -74,6 +77,13 @@ public class InviteActivity extends AppCompatActivity {
                     progressDialog.show();
                     sendEventInvite(InviteActivity.this);
                 }
+            }
+        });
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDetails(getApplicationContext(),getString(R.string.api_get_friends));
+                srl.setRefreshing(false);
             }
         });
 
@@ -159,6 +169,8 @@ public class InviteActivity extends AppCompatActivity {
         });
         queue.add(invReq);
     }
+
+
 
 
     public class InviteCardAdapter extends RecyclerView.Adapter<InviteCardAdapter.IncomingHolder> {
