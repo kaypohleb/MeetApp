@@ -83,6 +83,7 @@ public class CalendarActivity extends Activity {
 
         mProgress=new ProgressDialog(this);
         mProgress.setTitle("Uploading Schedule");
+        ;
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());

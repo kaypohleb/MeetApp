@@ -38,11 +38,15 @@ import java.util.List;
  */
 public class ConfimedFragment extends Fragment {
     private ArrayList<ConfirmDetails> actualDetails;
+    private ConfirmedCardAdapter mAdapter;
 
-    ConfirmedCardAdapter mAdapter;
     RecyclerView rv;
-    TextView emptyConfirmTV;
+    TextView emptyView;
+    View rootView;
     SwipeRefreshLayout srl;
+
+
+
     public ConfimedFragment() {
         // Required empty public constructor
     }
@@ -51,12 +55,13 @@ public class ConfimedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_confimed, container, false);
+        rootView = inflater.inflate(R.layout.fragment_confimed, container, false);
         srl = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_confirmed);
+        emptyView = (TextView)rootView.findViewById(R.id.empty_view);
         rv = (RecyclerView) rootView.findViewById(R.id.confirmed_rv);
         actualDetails = new ArrayList<>();
-        emptyConfirmTV = (TextView)rootView.findViewById(R.id.empty_confirmedTv);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(new ConfirmedCardAdapter(actualDetails));
         rv.setItemAnimator(new DefaultItemAnimator());
         getDetails(getActivity().getApplicationContext(),getString(R.string.api_get_confirmed));
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -75,7 +80,7 @@ public class ConfimedFragment extends Fragment {
         Type type = new TypeToken<List<ConfirmDetails>>(){}.getType();
         ArrayList<ConfirmDetails> eventList = gson.fromJson(jsonString, type);
         for (ConfirmDetails friend : eventList){
-            Log.i("Confirm Details", friend.event + "-" + friend.eventID);
+            Log.i("Confirm Details", friend.getEvent_name() + "-" + friend.getEvent_id());
         }
         return eventList;
     }
@@ -87,7 +92,7 @@ public class ConfimedFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 Log.d("Response", response.toString());
                 actualDetails = parseJSON(response.toString());
-                emptyConfirmTV.setVisibility(View.GONE);
+                emptyView.setVisibility((actualDetails.size() > 0? View.GONE : View.VISIBLE));
                 mAdapter = new ConfirmedCardAdapter(actualDetails);
                 rv.setAdapter(mAdapter);
                 srl.setRefreshing(false);
@@ -97,10 +102,8 @@ public class ConfimedFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error", error.toString());
-                mAdapter = new ConfirmedCardAdapter(actualDetails);
-                rv.setAdapter(mAdapter);
-                rv.setVisibility(View.GONE);
-                emptyConfirmTV.setVisibility(View.VISIBLE);
+                actualDetails = new ArrayList<>();
+                emptyView.setVisibility((actualDetails.size() > 0? View.GONE : View.VISIBLE));
                 srl.setRefreshing(false);
             }
         });
@@ -109,6 +112,11 @@ public class ConfimedFragment extends Fragment {
 
     public class ConfirmedCardAdapter extends RecyclerView.Adapter<ConfirmedCardAdapter.ConfirmedHolder> {
         private ArrayList<ConfirmDetails> allConfirmDetails;
+
+        public void setCards(ArrayList<ConfirmDetails> details) {
+            this.allConfirmDetails = details;
+            notifyDataSetChanged();
+        }
 
         public ConfirmedCardAdapter(ArrayList<ConfirmDetails> dataArgs) {
             allConfirmDetails = dataArgs;
@@ -124,13 +132,17 @@ public class ConfimedFragment extends Fragment {
         @Override
         public void onBindViewHolder(ConfirmedCardAdapter.ConfirmedHolder holder, int position) {
             ConfirmDetails eventDetail = allConfirmDetails.get(position);
-            holder.setDetails(eventDetail);
+            holder.event_txt.setText(eventDetail.getEvent_name());
+            holder.date_txt.setText(eventDetail.getConfirm_date());
+            holder.date_txt.setBackground(getResources().getDrawable(R.drawable.button_round_green));
+            holder.duration_txt.setText(eventDetail.getDuration());
+            holder.location_txt.setText(eventDetail.getLocation());
 
         }
 
         @Override
         public int getItemCount() {
-            return allConfirmDetails.size();
+            return allConfirmDetails==null ? 0 : allConfirmDetails.size();
         }
 
 
@@ -141,29 +153,58 @@ public class ConfimedFragment extends Fragment {
             ConfirmedHolder(View itemView) {
                 super(itemView);
                 event_txt = itemView.findViewById(R.id.eventName_tv);
-                date_txt = itemView.findViewById(R.id.date_tv);
+                date_txt = itemView.findViewById(R.id.eventConfirmDate);
                 duration_txt = itemView.findViewById(R.id.duration_tv);
                 location_txt = itemView.findViewById(R.id.location_tv);
             }
 
-            void setDetails(ConfirmDetails confirmDetails) {
-                event_txt.setText(confirmDetails.event);
-                date_txt.setText(confirmDetails.date);
-                duration_txt.setText(confirmDetails.duration);
-                location_txt.setText(confirmDetails.location);
-            }
         }
-
     }
 
 
     class ConfirmDetails {
-        public String event;
-        public String eventID;
-        public String date;
-        public String duration;
-        public String location;
-        //change all detailsto private and get set methods
+        private String event_name;
+        private String event_id;
+        private String date_to;
+        private String date_from;
+        private String confirm_date;
+        private String duration;
+        private String location;
+        private String description;
+
+        public String getEvent_id() {
+            return event_id;
+        }
+
+        public String getConfirm_date() {
+            return confirm_date;
+        }
+
+        public String getEvent_name() {
+            return event_name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getDate_to() {
+            return date_to;
+        }
+
+        public String getDate_from() {
+            return date_from;
+        }
+
+        public String getDuration() {
+            return duration;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+
     }
 }
 

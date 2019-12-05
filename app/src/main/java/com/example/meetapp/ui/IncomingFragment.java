@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -275,7 +276,28 @@ public class IncomingFragment extends Fragment {
         @Override
         public void onBindViewHolder(IncomingHolder holder, int position) {
             IncomingDetails eventDetail = allIncomingDetails.get(position);
-            holder.setDetails(eventDetail);
+            holder.event_txt.setText(eventDetail.getEvent_name());
+            holder.date_txt.setText(eventDetail.getDate_from()+" - "+eventDetail.getDate_to());
+            holder.location_txt.setText(eventDetail.getLocation());
+            String status;
+            switch (Integer.valueOf(eventDetail.getStatus())){
+                case 0:
+                    status = getString(R.string.status_rejected);
+                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_red));
+                    break;
+                case 1:
+                    status = getString(R.string.status_accepted);
+                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_green));
+                    break;
+                case 2:
+                    status = getString(R.string.status_pending);
+                    break;
+                default :
+                    status="";
+                    break;
+
+            }
+            holder.status_txt.setText(status);
         }
 
         @Override
@@ -298,26 +320,7 @@ public class IncomingFragment extends Fragment {
         }
 
         void setDetails(IncomingDetails incomingDetails) {
-            event_txt.setText(incomingDetails.getEvent_name());
-            date_txt.setText(incomingDetails.getDate_from()+" - "+incomingDetails.getDate_to());
-            location_txt.setText(incomingDetails.getLocation());
-            String status;
-            switch (Integer.valueOf(incomingDetails.getStatus())){
-                case 0:
-                    status = getString(R.string.status_rejected);
-                    break;
-                case 1:
-                    status = getString(R.string.status_accepted);
-                    break;
-                case 2:
-                    status = getString(R.string.status_pending);
-                    break;
-                default :
-                    status="";
-                    break;
 
-            }
-            status_txt.setText(status);
 
         }
     }

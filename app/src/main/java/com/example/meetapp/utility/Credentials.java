@@ -1,5 +1,7 @@
 package com.example.meetapp.utility;
 
+import android.net.Uri;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import org.json.JSONException;
@@ -13,6 +15,7 @@ public class Credentials {
     private static String id;
     private static String email;
     private static GoogleSignInOptions gso;
+    private static Uri profilepic;
 
 
 
@@ -46,6 +49,14 @@ public class Credentials {
 
     public static void setGso(GoogleSignInOptions gso) {
         Credentials.gso = gso;
+    }
+
+    public static void setProfilepic(Uri profilepic) {
+        Credentials.profilepic = profilepic;
+    }
+
+    public static Uri getProfilepic() {
+        return profilepic;
     }
 
     public static JSONObject toJsonObject() throws JSONException {

@@ -3,14 +3,17 @@ package com.example.meetapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.meetapp.R;
 import com.example.meetapp.SplashActivity;
 import com.example.meetapp.utility.Credentials;
@@ -58,7 +61,6 @@ public class ProfileFragment extends Fragment {
 
         }
 
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,11 +69,11 @@ public class ProfileFragment extends Fragment {
         TextView idView = rootView.findViewById(R.id.id);
         TextView nameView = rootView.findViewById(R.id.name);
         TextView emailView = rootView.findViewById(R.id.email);
-
+        ImageView profilepic = rootView.findViewById(R.id.photo);
         nameView.setText(Credentials.getName());
         idView.setText(Credentials.getId());
         emailView.setText(Credentials.getEmail());
-
+        Glide.with(getActivity()).load(Credentials.getProfilepic()).fitCenter().circleCrop().into(profilepic);
         mGoogleSignInClient = GoogleSignIn.getClient(Objects.requireNonNull(getActivity()), Credentials.getGso());
         Button signOutButton = rootView.findViewById(R.id.log_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.google.android.gms.common.SignInButton;
 import org.json.JSONException;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -171,11 +173,12 @@ public class SplashActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             mProgress = new ProgressDialog(this);
-            mProgress.setMessage("Uploading your schedule");
+            mProgress.setMessage("Signing In");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Credentials.setName(account.getDisplayName());
             Credentials.setId(account.getId());
             Credentials.setEmail(account.getEmail());
+            Credentials.setProfilepic(account.getPhotoUrl());
             register();
 
 

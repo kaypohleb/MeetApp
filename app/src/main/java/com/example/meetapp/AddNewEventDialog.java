@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -76,7 +77,7 @@ public class AddNewEventDialog extends AppCompatActivity {
                     DatePickerDialog datePickerDialog2 = new DatePickerDialog(AddNewEventDialog.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            dateTo.setText(String.format("%d/%d/%d", dayOfMonth, month+1, year));
+                            dateTo.setText(String.format("%d-%d-%d", dayOfMonth, month+1, year));
                             toDate = String.format("%d-%d-%d", year, month+1, dayOfMonth);
                             endSet=true;
                         }
@@ -88,7 +89,7 @@ public class AddNewEventDialog extends AppCompatActivity {
         sendInviteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("Invite", "Clicked");
                 if(startSet&&endSet){
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     Date strDate = null;

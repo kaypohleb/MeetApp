@@ -28,6 +28,7 @@ import com.example.meetapp.utility.TimingAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mortbay.jetty.Main;
 
 import java.sql.Array;
 import java.sql.Time;
@@ -134,6 +135,8 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Response", response.toString());
+                Intent i = new Intent(FreeTimeGenerator.this, MainActivity.class);
+                startActivity(i);
 
             }
         }, new Response.ErrorListener() {
@@ -163,7 +166,8 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Response", response.toString());
-
+                Intent i = new Intent(FreeTimeGenerator.this, MainActivity.class);
+                startActivity(i);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -179,24 +183,15 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
         String endOfDateRange = date_to;
         int minTime = Integer.valueOf(duration);
 
-//        System.out.println("these are the participants");
-//        System.out.println(event.getParticipants());
+
         JSONArray participants = rParticipants;
         ArrayList<TimeSlot> TimeSlots = generateTimeSlots(startOfDateRange, endOfDateRange);
-//        System.out.println("These are the time slots");
-//        printTimeSlots(TimeSlots);
 
         ArrayList<TimeSlot> updatedTimeSlots = updateTimeSlotScores(TimeSlots, participants);
-//        System.out.println("These are the updated time slot scores");
-//        printTimeSlots(updatedTimeSlots);
 
         ArrayList<TimeSlot> revisedTimeSlots = reviseTimeSlots(updatedTimeSlots);
-//        System.out.println("These are the revised time slot scores");
-//        printTimeSlots(revisedTimeSlots);
 
         ArrayList<TimeSlot> sortedTimeSlots = sortTimeSlots(revisedTimeSlots, minTime);
-//        System.out.println("These are the sorted time slots");
-//        printTimeSlots(sortedTimeSlots);
 
         return sortedTimeSlots;
     }

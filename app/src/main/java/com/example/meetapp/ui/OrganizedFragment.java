@@ -132,52 +132,60 @@ public class OrganizedFragment extends Fragment {
                     parent, false);
             final OrganizedHolder viewHolder = new OrganizedHolder(view);
 
-            organizedDialog = new Dialog(context);
-            organizedDialog.setContentView(R.layout.dialog_card_organized);
-            organizedDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
             viewHolder.overall_organizedcv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    organizedDialog = new Dialog(context);
+                    organizedDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     final OrganizedDetails current = allOrganizedDetails.get(viewHolder.getAdapterPosition());
-                    Friends.updateInviteList(getActivity(), getString(R.string.api_get_invitees),
-                            current.getEvent_id());
+                    if (current.getStatus().equals("0")) {
+                        organizedDialog.setContentView(R.layout.dialog_card_organized);
 
-                    TextView title = (TextView) organizedDialog.findViewById(R.id.details_title);
-                    TextView date = (TextView) organizedDialog.findViewById(R.id.details_date);
-                    title.setText(current.getEvent_name());
-                    date.setText(String.format("%s - %s",
-                            current.getDate_from(),
-                            current.getDate_to()));
-                    LinearLayout linearLayout = organizedDialog.findViewById(R.id.details_scroll_linear);
-                    linearLayout.removeAllViews();
-                    for(Friends.Invitee invitee: Friends.getInvitees()){
-                        if(invitee.interest.equals("0")){
-                            continue;
-                        }
-                        TextView tv1 = new TextView(getActivity());
+                        Friends.updateInviteList(getActivity(), getString(R.string.api_get_invitees),
+                                current.getEvent_id());
 
-                        tv1.setText(Friends.swapIdForName(invitee.user_id));
-                        tv1.setLayoutParams(new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT));
-                        if(invitee.interest.equals("1")){
-                            tv1.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            tv1.setTextColor(getResources().getColor(R.color.white));
+                        TextView title = (TextView) organizedDialog.findViewById(R.id.details_title);
+                        TextView date = (TextView) organizedDialog.findViewById(R.id.details_date);
+                        title.setText(current.getEvent_name());
+                        date.setText(String.format("%s - %s",
+                                current.getDate_from(),
+                                current.getDate_to()));
+                        LinearLayout linearLayout = organizedDialog.findViewById(R.id.details_scroll_linear);
+                        linearLayout.removeAllViews();
+                        for (Friends.Invitee invitee : Friends.getInvitees()) {
+                            if (invitee.interest.equals("0")) {
+                                continue;
+                            }
+                            TextView tv1 = new TextView(getActivity());
+
+                            tv1.setText(Friends.swapIdForName(invitee.user_id));
+                            tv1.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            if (invitee.interest.equals("1")) {
+                                tv1.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                                tv1.setTextColor(getResources().getColor(R.color.white));
+                            }
+                            linearLayout.addView(tv1);
                         }
-                        linearLayout.addView(tv1);
+                        Button choseButton = organizedDialog.findViewById(R.id.btn_date_suggest);
+                        choseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(getActivity(), FreeTimeGenerator.class);
+                                i.putExtra("event_id", current.getEvent_id());
+                                i.putExtra("date_from", current.getDate_from());
+                                i.putExtra("date_to", current.getDate_to());
+                                i.putExtra("duration", current.getDuration());
+                                startActivity(i);
+                            }
+
+                        });
+                    } else {
+                        organizedDialog.setContentView(R.layout.dialog_card_organized);
                     }
-                    Button choseButton = organizedDialog.findViewById(R.id.btn_date_suggest);
-                    choseButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(getActivity(), FreeTimeGenerator.class);
-                            i.putExtra("event_id",current.getEvent_id());
-                            i.putExtra("date_from",current.getDate_from());
-                            i.putExtra("date_to",current.getDate_to());
-                            i.putExtra("duration",current.getDuration());
-                            startActivity(i);
-                        }
-                    });
                     organizedDialog.show();
                 }
             }
@@ -189,7 +197,25 @@ public class OrganizedFragment extends Fragment {
         @Override
         public void onBindViewHolder(OrganizedHolder holder, int position) {
             OrganizedDetails eventDetail = allOrganizedDetails.get(position);
-            holder.setDetails(eventDetail);
+            holder.event_txt.setText(eventDetail.event_name);
+            holder.date_txt.setText(eventDetail.getDate_from()+" - "+eventDetail.getDate_to());
+            String status;
+            switch (Integer.valueOf(eventDetail.getStatus())){
+                case 0:
+                    status = getString(R.string.status_invited);
+                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_yellow));
+                    break;
+                case 1:
+                    status = getString(R.string.status_polling);
+                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_blue));
+                    break;
+                default :
+                    status="";
+                    break;
+
+            }
+            holder.status_txt.setText(status);
+            holder.location_txt.setText(eventDetail.location);
         }
 
 
@@ -215,26 +241,6 @@ public class OrganizedFragment extends Fragment {
         }
 
 
-        void setDetails(OrganizedDetails organizedDetails) {
-            event_txt.setText(organizedDetails.event_name);
-            date_txt.setText(organizedDetails.getDate_from()+" - "+organizedDetails.getDate_to());
-            String status;
-            switch (Integer.valueOf(organizedDetails.getStatus())){
-                case 0:
-                    status = getString(R.string.status_invited);
-                    break;
-                case 1:
-                    status = getString(R.string.status_polling);
-                    break;
-                default :
-                    status="";
-                    break;
-
-            }
-            status_txt.setText(status);
-            location_txt.setText(organizedDetails.location);
-
-        }
     }
 
     public class OrganizedDetails {
