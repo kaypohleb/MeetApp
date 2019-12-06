@@ -68,11 +68,10 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
         }
         public void check(boolean b){
             if(b) {
-                cardView.setCardBackgroundColor(Color.parseColor("#00574B"));
-                startTv.setTextColor(Color.WHITE);
-                endTV.setTextColor(Color.WHITE);
+                startTv.setTextColor(Color.RED);
+                endTV.setTextColor(Color.RED);
             }else{
-                cardView.setCardBackgroundColor(Color.WHITE);
+
                 startTv.setTextColor(Color.BLACK);
                 endTV.setTextColor(Color.BLACK);
             }

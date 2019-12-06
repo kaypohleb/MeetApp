@@ -431,9 +431,8 @@ public class IncomingFragment extends Fragment {
             Log.d("Bind",eventDetail.toString());
             holder.date_txt.setText(eventDetail.getDate());
             if(holder.getChecked()){
-                holder.overall_pollingcv.setBackgroundColor(Color.parseColor("#00574B"));
-                holder.date_txt.setTextColor(Color.WHITE);
-                holder.totalvote_tv.setTextColor(Color.WHITE);
+                holder.date_txt.setTextColor(Color.RED);
+                holder.totalvote_tv.setTextColor(Color.RED);
                 Integer i = Integer.valueOf(eventDetail.getTotal_vote())+1;
                 holder.totalvote_tv.setText(i.toString());
                 Polls.addPollVoteList(eventDetail);
