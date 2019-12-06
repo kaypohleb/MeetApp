@@ -68,6 +68,8 @@ public class AddNewEventDialog extends AppCompatActivity {
                                     dateFrom.setText(s);
                                     fromDate = String.format("%d-%d-%d", year, month+1, dayOfMonth);
                                     startSet=true;
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Pick a date today or in the future!", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();
