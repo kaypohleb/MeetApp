@@ -14,6 +14,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder> {
@@ -56,23 +57,23 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView startTv;
         TextView endTV;
+        CardView cardView;
 
         ViewHolder(View itemView) {
             super(itemView);
             startTv = itemView.findViewById(R.id.details_start);
             endTV = itemView.findViewById(R.id.details_end);
+            cardView =itemView.findViewById(R.id.time_cv);
             itemView.setOnClickListener(this);
         }
         public void check(boolean b){
             if(b) {
-                startTv.setBackgroundColor(Color.parseColor("#00574B"));
+                cardView.setCardBackgroundColor(Color.parseColor("#00574B"));
                 startTv.setTextColor(Color.WHITE);
-                endTV.setBackgroundColor(Color.parseColor("#00574B"));
                 endTV.setTextColor(Color.WHITE);
             }else{
-                startTv.setBackgroundColor(Color.WHITE);
+                cardView.setCardBackgroundColor(Color.WHITE);
                 startTv.setTextColor(Color.BLACK);
-                endTV.setBackgroundColor(Color.WHITE);
                 endTV.setTextColor(Color.BLACK);
             }
         }

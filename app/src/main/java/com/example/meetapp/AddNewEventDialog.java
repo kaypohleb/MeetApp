@@ -27,6 +27,7 @@ public class AddNewEventDialog extends AppCompatActivity {
 
     Calendar c;
     Button sendInviteBtn;
+    Button backBtn;
     EditText dateTo;
     EditText dateFrom;
     EditText meetingTitle;
@@ -51,6 +52,7 @@ public class AddNewEventDialog extends AppCompatActivity {
         starthMonth = c.get(Calendar.MONTH);
         startDay = c.get(Calendar.DAY_OF_MONTH);
         sendInviteBtn = findViewById(R.id.btn_next);
+        backBtn = findViewById(R.id.btn_back);
         dateFrom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -58,9 +60,19 @@ public class AddNewEventDialog extends AppCompatActivity {
                     DatePickerDialog datePickerDialog = new DatePickerDialog(AddNewEventDialog.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            dateFrom.setText(String.format("%d-%d-%d", dayOfMonth, month+1, year));
-                            fromDate = String.format("%d-%d-%d", year, month+1, dayOfMonth);
-                            startSet=true;
+                            String s =String.format("%d-%d-%d", dayOfMonth, month+1, year);
+                            try {
+                                Date check = new SimpleDateFormat("dd-MM-yyyy").parse(s);
+                                Date now = new Date();
+                                if(check.compareTo(now)>=0){
+                                    dateFrom.setText(s);
+                                    fromDate = String.format("%d-%d-%d", year, month+1, dayOfMonth);
+                                    startSet=true;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }, startYear, starthMonth, startDay);
                     datePickerDialog.show();
@@ -118,6 +130,12 @@ public class AddNewEventDialog extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(), "Either or both dates not set", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }

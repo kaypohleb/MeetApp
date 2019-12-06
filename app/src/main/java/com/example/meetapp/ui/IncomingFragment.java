@@ -29,6 +29,10 @@ import com.example.meetapp.MainActivity;
 import com.example.meetapp.R;
 import com.example.meetapp.utility.BusyDates;
 import com.example.meetapp.utility.Credentials;
+import com.example.meetapp.utility.DateConverter;
+import com.example.meetapp.utility.IncomingDetails;
+import com.example.meetapp.utility.PollDetails;
+import com.example.meetapp.utility.Polls;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -92,7 +96,7 @@ public class IncomingFragment extends Fragment {
         Type type = new TypeToken<List<IncomingDetails>>(){}.getType();
         ArrayList<IncomingDetails> eventList = gson.fromJson(jsonString, type);
         for (IncomingDetails friend : eventList){
-            Log.i("Incoming Details", friend.event_id + "-" + friend.status);
+            Log.i("Incoming Details", friend.getEvent_id() + "-" + friend.getStatus());
         }
         return eventList;
     }
@@ -125,21 +129,86 @@ public class IncomingFragment extends Fragment {
         Type type = new TypeToken<List<PollDetails>>(){}.getType();
         ArrayList<PollDetails> pollList = gson.fromJson(jsonString, type);
         for (PollDetails date : pollList){
-            Log.i("Incoming Details", date.date + "-" + date.total_vote);
+            Log.i("Incoming Details", date.getDate() + "-" + date.getTotal_vote());
         }
         return pollList;
     }
 
-    private void getPollDetails(Context context, String s, String user_id, String event_id){
+    private void getPollDetails(final Context context, String s, final IncomingDetails current){
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
-                s+Credentials.getId(), null, new Response.Listener<JSONArray>() {
+                s+Credentials.getId().concat("/").concat(current.getEvent_id()), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d("Response", response.toString());
                 personalPollDetails = parsePollJSON(response.toString());
+                Boolean hasVoted = false;
+                for (PollDetails pollD : personalPollDetails) {
+                    if (pollD.getVote().equals("1")) {
+                        hasVoted = true;
+                        break;
+                    }
+                }
+                if (!hasVoted) {
+                    Log.d("Convertsion", personalPollDetails.toString());
+                    incomingDialog.setContentView(R.layout.dialog_polling);
+                    incomingDialog.setTitle("Vote for your preferred dates");
+                    TextView title = (TextView) incomingDialog.findViewById(R.id.voteTitle_tv);
+                    TextView date = (TextView) incomingDialog.findViewById(R.id.eventDates_tv);
+                    title.setText(current.getEvent_name());
+                    date.setText(current.getDate_from().concat(" - ").concat(current.getDate_to()));
+                    RecyclerView rv = incomingDialog.findViewById(R.id.poll_rv);
+                    rv.setLayoutManager(new LinearLayoutManager(context));
+                    rv.setAdapter(new PollingCardAdapter(personalPollDetails, getActivity()));
+                    rv.setHasFixedSize(true);
+                    Button voteBtn = (Button) incomingDialog.findViewById(R.id.vote_btn);
+                    voteBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (Polls.getPollVoteList().size() > 0) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    jsonObject.put("invite_id", current.getInvite_id());
+                                    JSONArray outerjsonArray = new JSONArray();
+                                    for (PollDetails details : Polls.getPollVoteList()) {
+                                        JSONArray innerjsonArray = new JSONArray();
+                                        innerjsonArray.put(details.getDate_id());
+                                        innerjsonArray.put(1);
+                                        outerjsonArray.put(innerjsonArray);
+                                    }
 
+                                    jsonObject.put("date_ids", outerjsonArray);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("JSON_submit_poll",jsonObject.toString());
+                                RequestQueue queue = Volley.newRequestQueue(context);
+                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                                        getString(R.string.api_post_choice), jsonObject, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("Response", response.toString());
+                                        incomingDialog.dismiss();
+                                        getDetails(getActivity().getApplicationContext(),getString(R.string.api_get_invited));
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d("Error", error.toString());
+                                    }
+                                });
+                                queue.add(jsonObjectRequest);
+                            } else {
+                                Toast.makeText(getActivity(), "Please select at least one date!", Toast.LENGTH_SHORT).show();
+                            }
 
+                        }
+                    });
+                    incomingDialog.show();
+
+                }else{
+                    Toast.makeText(context,"You've already voted!",Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -151,6 +220,9 @@ public class IncomingFragment extends Fragment {
         });
         queue.add(jsonArrayRequest);
     }
+
+
+
 
 
     private void updateInviteeDetails(Context context, String s, String invite_id, int interest){
@@ -169,7 +241,7 @@ public class IncomingFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Response", response.toString());
-
+                getDetails(getActivity().getApplicationContext(),getString(R.string.api_get_invited));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -218,26 +290,21 @@ public class IncomingFragment extends Fragment {
 
                     incomingDialog = new Dialog(context);
                     incomingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    if(current.status.equals("2")){
-                        incomingDialog.setContentView(R.layout.dialog_polling);
-                        TextView title = (TextView) incomingDialog.findViewById(R.id.details_title);
-                        TextView date = (TextView) incomingDialog.findViewById(R.id.details_date);
-                        title.setText(current.getEvent_name());
-                        title.setText(current.getDate_from().concat(" - ").concat(current.date_to));
-                        RecyclerView rv = incomingDialog.findViewById(R.id.poll_rv);
-                        rv.setAdapter(new PollingCardAdapter(personalPollDetails,getActivity()));
-                        Button voteBtn = (Button)incomingDialog.findViewById(R.id.vote_btn);
+                    if(!current.getInterest().equals("2")){
+                        getPollDetails(context,getString(R.string.api_get_event_polls),current);
+
 
                     }else
                         {
 
                         incomingDialog.setContentView(R.layout.dialog_card_incoming);
+                        incomingDialog.setTitle("Incoming Invitation!");
                         TextView title = (TextView) incomingDialog.findViewById(R.id.details_title);
                         TextView date = (TextView) incomingDialog.findViewById(R.id.details_date);
                         title.setText(current.getEvent_name());
                         date.setText(String.format("%s - %s",
-                                current.getDate_from(),
-                                current.getDate_to()));
+                                DateConverter.dateConvert(current.getDate_from()),
+                                DateConverter.dateConvert(current.getDate_to())));
                         Button acceptBtn = (Button)incomingDialog.findViewById(R.id.accept_btn);
                         Button rejectBtn = (Button)incomingDialog.findViewById(R.id.reject_btn);
                         final String inviteID = current.getInvite_id();
@@ -277,23 +344,37 @@ public class IncomingFragment extends Fragment {
         public void onBindViewHolder(IncomingHolder holder, int position) {
             IncomingDetails eventDetail = allIncomingDetails.get(position);
             holder.event_txt.setText(eventDetail.getEvent_name());
-            holder.date_txt.setText(eventDetail.getDate_from()+" - "+eventDetail.getDate_to());
+            holder.date_txt.setText(DateConverter.dateConvert(eventDetail.getDate_from())+" - "+DateConverter.dateConvert(eventDetail.getDate_to()));
             holder.location_txt.setText(eventDetail.getLocation());
             String status;
             switch (Integer.valueOf(eventDetail.getStatus())){
                 case 0:
-                    status = getString(R.string.status_rejected);
-                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_red));
+                    switch (Integer.valueOf(eventDetail.getInterest())){
+                        case 0:
+                            status = getString(R.string.status_rejected);
+                            holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_red));
+                            break;
+                        case 1:
+                            status = getString(R.string.status_accepted);
+                            holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_green));
+                            break;
+                        case 2:
+                            status = getString(R.string.status_pending);
+                            holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_yellow));
+                            break;
+                        default :
+                            status = "";
+                            break;
+
+                    }
                     break;
                 case 1:
-                    status = getString(R.string.status_accepted);
-                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_green));
+                    status = getString(R.string.status_polling);
+                    holder.status_txt.setBackground(getResources().getDrawable(R.drawable.button_round_blue));
                     break;
-                case 2:
-                    status = getString(R.string.status_pending);
-                    break;
+
                 default :
-                    status="";
+                    status ="";
                     break;
 
             }
@@ -308,8 +389,8 @@ public class IncomingFragment extends Fragment {
     }
     class IncomingHolder extends RecyclerView.ViewHolder {
 
-        private TextView event_txt, date_txt, status_txt,location_txt;
-        private CardView overall_incomingcv;
+        public TextView event_txt, date_txt, status_txt,location_txt;
+        public CardView overall_incomingcv;
         IncomingHolder(View itemView) {
             super(itemView);
             event_txt = itemView.findViewById(R.id.eventName_tv);
@@ -319,84 +400,25 @@ public class IncomingFragment extends Fragment {
             overall_incomingcv = itemView.findViewById(R.id.incoming_cv);
         }
 
-        void setDetails(IncomingDetails incomingDetails) {
-
-
-        }
-    }
-    public class IncomingDetails {
-        private String event_name;
-        private String user_id;
-        private String event_id;
-        private String date_from;
-        private String date_to;
-        private String description;
-        private String duration;
-        private String location;
-        private String confirm_date;
-        private String status;
-        private String invite_id;
-
-        public IncomingDetails() {
-        }
-
-        public String getLocation() {
-            return location;
-        }
-
-        public String getDuration() {
-            return duration;
-        }
-
-        public String getDate_from() {
-            return date_from;
-        }
-
-        public String getDate_to() {
-            return date_to;
-        }
-
-        public String getEvent_id() {
-            return event_id;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getEvent_name() {
-            return event_name;
-        }
-
-        public String getConfirm_date() {
-            return confirm_date;
-        }
-
-        public String getUser_id() {
-            return user_id;
-        }
-
-        public String getInvite_id(){
-            return invite_id;
-        }
-
-        public String getStatus() {
-            return status;
-        }
     }
 
-    public class PollingCardAdapter extends RecyclerView.Adapter<PollHolder> {
+
+    class PollingCardAdapter extends RecyclerView.Adapter<PollingCardAdapter.PollHolder> {
         private ArrayList<PollDetails> allPollingDetails;
         private Context context;
 
         public PollingCardAdapter(ArrayList<PollDetails> dataArgs, Context context) {
             this.allPollingDetails = dataArgs;
             this.context = context;
+
+            for(PollDetails poll:allPollingDetails){
+                poll.setSelected(false);
+            }
         }
 
 
         @Override
-        public PollHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public PollingCardAdapter.PollHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_polldates,
                     parent, false);
             PollHolder viewHolder = new PollHolder(view);
@@ -404,9 +426,27 @@ public class IncomingFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(PollHolder holder, int position) {
+        public void onBindViewHolder(PollingCardAdapter.PollHolder holder, int position) {
             PollDetails eventDetail = allPollingDetails.get(position);
-            holder.setDetails(eventDetail);
+            Log.d("Bind",eventDetail.toString());
+            holder.date_txt.setText(eventDetail.getDate());
+            if(holder.getChecked()){
+                holder.overall_pollingcv.setBackgroundColor(Color.parseColor("#00574B"));
+                holder.date_txt.setTextColor(Color.WHITE);
+                holder.totalvote_tv.setTextColor(Color.WHITE);
+                Integer i = Integer.valueOf(eventDetail.getTotal_vote())+1;
+                holder.totalvote_tv.setText(i.toString());
+                Polls.addPollVoteList(eventDetail);
+                eventDetail.setSelected(true);
+            }else {
+                holder.overall_pollingcv.setBackgroundColor(Color.WHITE);
+                holder.date_txt.setTextColor(Color.BLACK);
+                holder.totalvote_tv.setTextColor(Color.BLACK);
+                Polls.removePollVoteList(eventDetail);
+                holder.totalvote_tv.setText(eventDetail.getTotal_vote());
+                eventDetail.setSelected(false);
+            }
+
         }
 
         @Override
@@ -414,53 +454,37 @@ public class IncomingFragment extends Fragment {
             return allPollingDetails.size();
         }
 
+        public class PollHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+            private TextView date_txt, totalvote_tv;
+            private CardView overall_pollingcv;
+            private Boolean checked;
+            PollHolder(View itemView) {
+                super(itemView);
+                totalvote_tv = itemView.findViewById(R.id.eventDate);
+                date_txt = itemView.findViewById(R.id.totalVotes);
+                overall_pollingcv = itemView.findViewById(R.id.poll_cv);
+                checked=false;
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                checked = !checked;
+                notifyDataSetChanged();
+
+            }
+
+            public Boolean getChecked() {
+                return checked;
+            }
+        }
+
 
     }
-    class PollHolder extends RecyclerView.ViewHolder {
 
-        private TextView date_txt, totalvote_tv;
-        private CardView overall_pollingcv;
-        PollHolder(View itemView) {
-            super(itemView);
-            totalvote_tv = itemView.findViewById(R.id.eventDate);
-            date_txt = itemView.findViewById(R.id.totalVotes);
-            overall_pollingcv = itemView.findViewById(R.id.poll_cv);
-        }
 
-        void setDetails(PollDetails pollDetails) {
-            totalvote_tv.setText(pollDetails.getTotal_vote());
-            date_txt.setText(pollDetails.getDate());
-
-        }
     }
 
-    public class PollDetails{
-        private String date_id;
-        private String event_id;
-        private String date;
-        private String vote;
-        private String total_vote;
-
-        public String getEvent_id() {
-            return event_id;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public String getDate_id() {
-            return date_id;
-        }
-
-        public String getTotal_vote() {
-            return total_vote;
-        }
-
-        public String getVote() {
-            return vote;
-        }
-    }
-}
 
 

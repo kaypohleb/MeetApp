@@ -62,25 +62,8 @@ public final class Friends {;
         queue.add(jsonArrayRequest);
     }
 
-    public static void updateInviteList(Context context, String url, String event_id){
-        RequestQueue queue = Volley.newRequestQueue(context);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url+event_id, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.d("Response", response.toString());
-
-
-                invitees = parseJSON(response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Error", error.toString());
-                invitees = new ArrayList<>();
-            }
-        });
-        queue.add(jsonArrayRequest);
-
+    public static void setInvitees(String s) {
+        Friends.invitees = parseJSON(s);
     }
 
     public static ArrayList<Invitee> getInvitees() {
@@ -91,7 +74,7 @@ public final class Friends {;
         return user_name;
     }
 
-    public static ArrayList<Invitee> parseJSON(String jsonString) {
+    private static ArrayList<Invitee> parseJSON(String jsonString) {
         Gson gson = new Gson();
         Type type = new TypeToken<List<Invitee>>(){}.getType();
         ArrayList<Invitee> inviteList = gson.fromJson(jsonString, type);

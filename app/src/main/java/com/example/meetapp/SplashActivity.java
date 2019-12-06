@@ -201,7 +201,6 @@ public class SplashActivity extends AppCompatActivity {
                         Log.d("Response", response);
                         mProgress.dismiss();
                         Intent i = new Intent(SplashActivity.this, IntroductionActivity.class);
-                        i.putExtra(MainActivity.TUTORIAL,false);
                         startActivity(i);
                     }
                 },
@@ -211,7 +210,9 @@ public class SplashActivity extends AppCompatActivity {
                         // error
                         Log.d("Error.Response", error.toString());
                         mProgress.dismiss();
-                        startActivity(new Intent(SplashActivity.this, IntroductionActivity.class));
+                        Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                        i.putExtra(MainActivity.TUTORIAL,true);
+                        startActivity(i);
 
                     }
                 }

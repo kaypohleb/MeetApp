@@ -73,7 +73,7 @@
     <string name="api_get_invitees">https://t-bounty-249014.appspot.com/invite/get/</string>
     <string name="api_get_poll_organizer">https://t-bounty-249014.appspot.com/poll/organizer/</string>
     <string name="api_get_vote_details">https://t-bounty-249014.appspot.com/poll/voting/details/</string>
-    <string name="api_get_event_participants">https://t-bounty-249014.appspot.com/poll/participant/</string>
+    <string name="api_get_event_polls">https://t-bounty-249014.appspot.com/poll/participant/</string>
 
     <string name="meeting_dialog_header">Meeting Details</string>
     <string name="meeting_dialog_title">Title:</string>

@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -25,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -42,6 +46,8 @@ public class InviteActivity extends AppCompatActivity {
     String event_duration;
     ProgressDialog progressDialog;
     SwipeRefreshLayout srl;
+    InviteCardAdapter adapter;
+    SearchView searchView;
     RecyclerView rv;
     ArrayList<String> inviteList;
     ArrayList<Integer> selectedInvited;
@@ -60,6 +66,8 @@ public class InviteActivity extends AppCompatActivity {
         date_from = intent.getStringExtra(AddNewEventDialog.STRING_DATEFROM);
         date_to = intent.getStringExtra(AddNewEventDialog.STRING_DATETO);
         details = intent.getStringExtra(AddNewEventDialog.STRING_DETAILS);
+        searchView = findViewById(R.id.invite_sv);
+
         selectedInvited =  new ArrayList<>();
 
         progressDialog = new ProgressDialog(InviteActivity.this);
@@ -93,7 +101,22 @@ public class InviteActivity extends AppCompatActivity {
     private void getDetails(Context context, String s){
         Friends.updateFriendList(context,s);
         inviteList = Friends.getUser_name();
-        rv.setAdapter(new InviteCardAdapter(inviteList));
+        adapter = new InviteCardAdapter(inviteList,InviteActivity.this);
+        rv.setAdapter(adapter);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                adapter.getFilter().filter(text);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         api_setup = true;
 
     }
@@ -173,10 +196,14 @@ public class InviteActivity extends AppCompatActivity {
 
 
 
-    public class InviteCardAdapter extends RecyclerView.Adapter<InviteCardAdapter.IncomingHolder> {
+    public class InviteCardAdapter extends RecyclerView.Adapter<InviteCardAdapter.IncomingHolder> implements Filterable {
         private ArrayList<String> allInviteDetails;
-        public InviteCardAdapter(ArrayList<String> dataArgs){
+        private ArrayList<String> originalDetails;
+        private Context context;
+        public InviteCardAdapter(ArrayList<String> dataArgs, Context c){
             allInviteDetails = dataArgs;
+            originalDetails = dataArgs;
+            context = c;
         }
 
         @Override
@@ -195,6 +222,41 @@ public class InviteActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return allInviteDetails.size();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    ArrayList<String> filteredResults = null;
+                    if(constraint.length()==0){
+                        filteredResults = originalDetails;
+                    }else{
+                        filteredResults = getFilteredResults(constraint.toString().toLowerCase());
+
+                    }
+                    FilterResults results = new FilterResults();
+                    results.values = filteredResults;
+
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                }
+            };
+        }
+        private ArrayList<String> getFilteredResults(String constraint) {
+            ArrayList<String> results = new ArrayList<>();
+
+            for (String item : originalDetails) {
+                if (item.toLowerCase().contains(constraint)) {
+                    results.add(item);
+                }
+            }
+            return results;
         }
 
         class IncomingHolder extends RecyclerView.ViewHolder {

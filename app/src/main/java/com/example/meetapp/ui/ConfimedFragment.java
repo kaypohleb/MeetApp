@@ -1,9 +1,11 @@
 package com.example.meetapp.ui;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.meetapp.R;
 import com.example.meetapp.utility.Credentials;
+import com.example.meetapp.utility.DateConverter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -47,6 +50,7 @@ public class ConfimedFragment extends Fragment {
 
 
 
+
     public ConfimedFragment() {
         // Required empty public constructor
     }
@@ -61,7 +65,7 @@ public class ConfimedFragment extends Fragment {
         rv = (RecyclerView) rootView.findViewById(R.id.confirmed_rv);
         actualDetails = new ArrayList<>();
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.setAdapter(new ConfirmedCardAdapter(actualDetails));
+        rv.setAdapter(new ConfirmedCardAdapter(actualDetails,getActivity()));
         rv.setItemAnimator(new DefaultItemAnimator());
         getDetails(getActivity().getApplicationContext(),getString(R.string.api_get_confirmed));
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -93,7 +97,7 @@ public class ConfimedFragment extends Fragment {
                 Log.d("Response", response.toString());
                 actualDetails = parseJSON(response.toString());
                 emptyView.setVisibility((actualDetails.size() > 0? View.GONE : View.VISIBLE));
-                mAdapter = new ConfirmedCardAdapter(actualDetails);
+                mAdapter = new ConfirmedCardAdapter(actualDetails,getActivity());
                 rv.setAdapter(mAdapter);
                 srl.setRefreshing(false);
 
@@ -112,14 +116,15 @@ public class ConfimedFragment extends Fragment {
 
     public class ConfirmedCardAdapter extends RecyclerView.Adapter<ConfirmedCardAdapter.ConfirmedHolder> {
         private ArrayList<ConfirmDetails> allConfirmDetails;
-
+        private Context context;
         public void setCards(ArrayList<ConfirmDetails> details) {
             this.allConfirmDetails = details;
             notifyDataSetChanged();
         }
 
-        public ConfirmedCardAdapter(ArrayList<ConfirmDetails> dataArgs) {
+        public ConfirmedCardAdapter(ArrayList<ConfirmDetails> dataArgs,Context c) {
             allConfirmDetails = dataArgs;
+            context = c;
         }
 
         @Override
@@ -131,13 +136,29 @@ public class ConfimedFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ConfirmedCardAdapter.ConfirmedHolder holder, int position) {
-            ConfirmDetails eventDetail = allConfirmDetails.get(position);
+            final ConfirmDetails eventDetail = allConfirmDetails.get(position);
             holder.event_txt.setText(eventDetail.getEvent_name());
-            holder.date_txt.setText(eventDetail.getConfirm_date());
+            holder.date_txt.setText(DateConverter.dateConvert(eventDetail.getConfirm_date()));
             holder.date_txt.setBackground(getResources().getDrawable(R.drawable.button_round_green));
-            holder.duration_txt.setText(eventDetail.getDuration());
+            holder.duration_txt.setText(eventDetail.getDuration()+" Hours");
             holder.location_txt.setText(eventDetail.getLocation());
-
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog confirmDialog = new Dialog(context);
+                    confirmDialog.setTitle("Meeting Details");
+                    confirmDialog.setContentView(R.layout.dialog_card_confirmed);
+                    TextView title = confirmDialog.findViewById(R.id.details_title);
+                    title.setText(eventDetail.getEvent_name());
+                    TextView date = confirmDialog.findViewById(R.id.details_date);
+                    date.setText(eventDetail.getConfirm_date());
+                    TextView duration = confirmDialog.findViewById(R.id.details_duration);
+                    duration.setText(eventDetail.getDuration()+" Hours");
+                    TextView location = confirmDialog.findViewById(R.id.details_location);
+                    location.setText(eventDetail.getLocation());
+                    confirmDialog.show();
+                }
+            });
         }
 
         @Override
@@ -149,6 +170,7 @@ public class ConfimedFragment extends Fragment {
         class ConfirmedHolder extends RecyclerView.ViewHolder {
 
             private TextView event_txt, date_txt, duration_txt, location_txt;
+            private CardView cardView;
 
             ConfirmedHolder(View itemView) {
                 super(itemView);
@@ -156,6 +178,7 @@ public class ConfimedFragment extends Fragment {
                 date_txt = itemView.findViewById(R.id.eventConfirmDate);
                 duration_txt = itemView.findViewById(R.id.duration_tv);
                 location_txt = itemView.findViewById(R.id.location_tv);
+                cardView = itemView.findViewById(R.id.confirm_cv);
             }
 
         }

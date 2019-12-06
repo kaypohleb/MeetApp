@@ -12,9 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_above="@id/invite_button">
+
+        <SearchView
+            android:id="@+id/invite_sv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        </SearchView>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_invite"
         android:layout_width="match_parent"
+        android:layout_below="@+id/invite_sv"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         >
@@ -34,8 +43,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_invite"
+        android:textColor="@color/white"
         android:fontFamily="@font/productsans_bold"
-        android:background="@drawable/button_round"
+        android:background="@drawable/button_round_green"
         android:layout_margin="15dp"
         android:layout_alignParentBottom="true"/>
 

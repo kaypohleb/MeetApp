@@ -10,6 +10,8 @@
     <TextView
         android:id="@+id/details_title"
         android:layout_width="match_parent"
+        android:textSize="28sp"
+        android:fontFamily="@font/productsans_bold"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/details_date"
@@ -18,7 +20,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/details_scroll_linear"
@@ -27,9 +29,11 @@
             android:orientation="vertical" />
     </ScrollView>
     <Button
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_date_suggest"
+        android:background="@drawable/button_round_green"
         android:text="@string/button_choose"/>
 
 </LinearLayout>

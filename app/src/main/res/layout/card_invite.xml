@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:padding="2dp"
-            android:textSize="18sp" />
+            android:textSize="32sp" />
 
     </RelativeLayout>
 

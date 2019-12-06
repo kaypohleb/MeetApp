@@ -85,8 +85,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         });
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

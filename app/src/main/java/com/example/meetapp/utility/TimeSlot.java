@@ -54,7 +54,7 @@ public class TimeSlot{
             r = hours + hourWord;
         }
         if (hours != 0 && mins != 0){
-            r += "\n";
+            r += " ";
         }
         if (mins != 0) {
             minWord = " mins";

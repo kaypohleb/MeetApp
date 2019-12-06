@@ -4,31 +4,28 @@
     android:layout_height="match_parent"
     android:id="@+id/details_dialog"
     android:orientation="vertical"
-    android:weightSum="9"
+    android:weightSum="18"
     android:layout_margin="@dimen/fab_margin"
     android:background="@drawable/dialog_round">
 
 
     <Spinner
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:id="@+id/spinner_chooseDates"
         android:layout_height="0dp"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_weight="7"
+        android:layout_weight="15"
         android:id="@+id/timing_rv"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
-
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="0dp"/>
 
     <Button
         android:id="@+id/accept_btn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/button_round"
+        android:background="@drawable/button_round_green"
         android:text="@string/button_accept"/>
 
 </LinearLayout>

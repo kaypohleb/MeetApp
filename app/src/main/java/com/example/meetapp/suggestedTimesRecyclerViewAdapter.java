@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.meetapp.utility.DateConverter;
 import com.example.meetapp.utility.TimeSlot;
 
 import java.util.List;
@@ -40,8 +41,8 @@ public class suggestedTimesRecyclerViewAdapter extends RecyclerView.Adapter<sugg
         String absentees = mData.get(position).getAbsenteesString();
 
         holder.freeTimeAbsenteesTextView.setText(absentees);
-        holder.freeTimeStartTextView.setText(startTime);
-        holder.freeTimeEndTextView.setText(endTime);
+        holder.freeTimeStartTextView.setText(DateConverter.dateTimewithoutSecondsConvert(startTime));
+        holder.freeTimeEndTextView.setText(DateConverter.dateTimewithoutSecondsConvert(endTime));
         holder.freeTimeDurationTextView.setText(duration);
     }
 

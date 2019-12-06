@@ -6,6 +6,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
+
     android:id="@+id/poll_cv">
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,10 +26,11 @@
                 android:layout_weight="5"
                 android:gravity="center"
                 android:layout_height="match_parent"
-                android:textSize="18sp"/>
+                android:textSize="12sp"/>
             <TextView
                 android:id="@+id/totalVotes"
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_weight="2"
                 android:layout_height="match_parent" />
 
