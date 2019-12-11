@@ -16,13 +16,13 @@
     <fragment
         android:id="@+id/nav_incoming"
         android:name="com.example.meetapp.ui.IncomingFragment"
-        android:label="@string/menu_incoming"
+        android:label="Invited"
         tools:layout="@layout/fragment_incoming" />
 
     <fragment
         android:id="@+id/nav_outgoing"
         android:name="com.example.meetapp.ui.OrganizedFragment"
-        android:label="@string/menu_outgoing"
+        android:label="Organizing"
         tools:layout="@layout/fragment_organized" />
 
     <fragment

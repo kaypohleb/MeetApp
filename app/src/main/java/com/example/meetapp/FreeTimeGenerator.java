@@ -29,11 +29,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mortbay.jetty.Main;
+import org.mortbay.util.ajax.JSON;
 
 import java.sql.Array;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,7 +103,8 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("Response", response.toString());
-                        response = rParticipants;
+                        rParticipants= response;
+
                         populateRv(generateFreeTimes());
                     }
                 }, new Response.ErrorListener() {
@@ -215,22 +218,23 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
         return r;
     }
     private ArrayList<TimeSlot> updateTimeSlotScores (ArrayList<TimeSlot> TimeSlots, JSONArray participants){
-
+        Log.d("particiants",participants.toString());
         for (TimeSlot ts: TimeSlots){
             Calendar TimeSlotStartTime = ts.getStartTime();
 
-            int x = 0;
-            while ( x< participants.length()){
+            for(int i=0;i<participants.length();i++){
                 try {
-                    JSONObject participant = participants.getJSONObject(x);
+                    JSONObject participant = participants.getJSONObject(i);
                     String name = participant.getString("username");
                     int priority = participant.getInt("priority");
                     JSONArray schedule = participant.getJSONArray("schedule");
 
                     int s = 0;
                     while (s < schedule.length()){
-                        String startTime = schedule.getJSONObject(s).getString("date_from");
-                        String endTime = schedule.getJSONObject(s).getString("date_to");
+                        Log.i("Schedule",schedule.toString());
+                        String startTime = schedule.getJSONObject(s).getString("start_datetime");
+                        Log.i("Schedule",schedule.getJSONObject(s).getString("start_datetime"));
+                        String endTime = schedule.getJSONObject(s).getString("end_datetime");
                         Calendar startCal = TimeSlot.convertTimeToCalendar(startTime);
                         Calendar endCal = TimeSlot.convertTimeToCalendar(endTime);
 
@@ -240,7 +244,7 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
                         s++;
                     }
                 } catch (JSONException e) {e.printStackTrace();}
-                x++;
+
             }
         }
 
@@ -370,7 +374,7 @@ public class FreeTimeGenerator extends AppCompatActivity implements suggestedTim
     }
     public void populateRv(ArrayList<TimeSlot> data) {
         // set up the RecyclerView
-
+        Log.d("TimeSlots",data.toString());
         suggestedTimesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new suggestedTimesRecyclerViewAdapter(this, data);
         adapter.setClickListener(this);
