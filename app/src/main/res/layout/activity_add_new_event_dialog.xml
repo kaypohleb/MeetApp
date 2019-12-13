@@ -67,7 +67,7 @@
                 android:textColorHint="@color/colorMiddle"
                 android:layout_height="wrap_content"
                 android:inputType = "number"
-                android:hint="Duration: How long(in Hrs)"
+                android:hint="@string/duration_how_long_in_hrs"
                 app:backgroundTint="@color/colorMiddle"/>
 
             <EditText

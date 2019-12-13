@@ -87,5 +87,6 @@
     <string name="invite_activity_header">Invite People</string>
 
     <string name="freeTime_default_selected">0 Timings Selected</string>
+    <string name="duration_how_long_in_hrs">Duration: How long(in Hrs)</string>
 
 </resources>
