@@ -9,8 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -52,6 +57,7 @@ public class InviteActivity extends AppCompatActivity {
     ArrayList<String> inviteList;
     ArrayList<Integer> selectedInvited;
     Button inviteBtn;
+    ArrayList<Integer> selectedVIP;
     boolean api_setup = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +72,9 @@ public class InviteActivity extends AppCompatActivity {
         date_from = intent.getStringExtra(AddNewEventDialog.STRING_DATEFROM);
         date_to = intent.getStringExtra(AddNewEventDialog.STRING_DATETO);
         details = intent.getStringExtra(AddNewEventDialog.STRING_DETAILS);
-        searchView = findViewById(R.id.invite_sv);
 
         selectedInvited =  new ArrayList<>();
-
+        selectedVIP = new ArrayList<>();
         progressDialog = new ProgressDialog(InviteActivity.this);
         progressDialog.setTitle(R.string.loading_event);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -162,7 +167,12 @@ public class InviteActivity extends AppCompatActivity {
         for(int pos: selectedInvited){
             JSONArray jsonArray = new JSONArray();
             jsonArray.put(Friends.swapNameForId(inviteList.get(pos)));
-            jsonArray.put(String.valueOf(2));
+            if(selectedVIP.contains(pos)){
+                jsonArray.put(String.valueOf(5));
+            }
+            else{
+                jsonArray.put(String.valueOf(2));
+            }
             invitationList.put(jsonArray);
         }
         try {
@@ -262,12 +272,31 @@ public class InviteActivity extends AppCompatActivity {
         class IncomingHolder extends RecyclerView.ViewHolder {
             private CardView cardView;
             private TextView name_txt;
+            private CheckedTextView vip_btn;
             private boolean clicked=false;
 
             IncomingHolder(View itemView) {
                 super(itemView);
-                 name_txt = itemView.findViewById(R.id.eventName_tv);
+                 name_txt = itemView.findViewById(R.id.invName_tv);
                  cardView = itemView.findViewById(R.id.invite_cv);
+                 vip_btn = itemView.findViewById(R.id.vip_btn);
+                 vip_btn.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         if(vip_btn.isChecked()){
+                             if(selectedVIP.contains(getAdapterPosition())){
+                                 selectedVIP.remove(getAdapterPosition());
+                             }
+                             vip_btn.setCheckMarkDrawable(R.drawable.ic_star_empty);
+                             vip_btn.setChecked(false);
+                         }else {
+                             selectedVIP.add(getAdapterPosition());
+                             vip_btn.setCheckMarkDrawable(R.drawable.ic_star);
+                             vip_btn.setChecked(true);
+                         }
+                     }
+                 });
+
                  name_txt.setOnClickListener(new View.OnClickListener() {
                      @Override
                      public void onClick(View v) {
@@ -275,12 +304,15 @@ public class InviteActivity extends AppCompatActivity {
                              cardView.setBackgroundColor(getColor(R.color.colorPrimaryDark));
                              name_txt.setTextColor(getColor(R.color.white));
                              selectedInvited.add(getAdapterPosition());
+
                              clicked=true;
                          }
                          else{
                              cardView.setBackgroundColor(getColor(R.color.white));
                              name_txt.setTextColor(getColor(R.color.colorPrimaryDark));
-                             selectedInvited.remove(getAdapterPosition());
+                             if(selectedInvited.contains(getAdapterPosition())) {
+                                 selectedInvited.remove(getAdapterPosition());
+                             }
                              clicked=false;
                          }
                      }

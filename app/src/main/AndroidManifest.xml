@@ -30,7 +30,6 @@
             android:theme="@style/AppTheme.ActionBar.Transparent"/>
         <activity
             android:name=".CalendarActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".FreeTimeGenerator"
