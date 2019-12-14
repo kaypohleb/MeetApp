@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -29,12 +28,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import com.google.android.gms.common.SignInButton;
-
 import org.json.JSONException;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); //full screen activity
 
         setContentView(R.layout.activity_splash);
-        ImageView image = (ImageView) findViewById(R.id.background);
+        ImageView image = findViewById(R.id.background);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -63,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        Drawable backgrounds[] = new Drawable[2];
+        Drawable[] backgrounds = new Drawable[2];
         backgrounds[0] = ContextCompat.getDrawable(this, R.drawable.gradientleft);
         backgrounds[1] = ContextCompat.getDrawable(this, R.drawable.gradientright);
 
@@ -77,13 +73,13 @@ public class SplashActivity extends AppCompatActivity {
         Crossfade(image, backgrounds, 5000);
 
     }
-    public void Crossfade(final ImageView image, final Drawable layers[], final int speedInMs) {
+    public void Crossfade(final ImageView image, final Drawable[] layers, final int speedInMs) {
         class BackgroundGradientThread implements Runnable {
-            Context mainContext;
+            private Context mainContext;
             TransitionDrawable crossFader;
             boolean first = true;
 
-            BackgroundGradientThread(Context c) {
+            private BackgroundGradientThread(Context c) {
                 mainContext = c;
             }
 
@@ -94,7 +90,7 @@ public class SplashActivity extends AppCompatActivity {
                 while (true) {
                     if (!reverse) {
                         for (int i = 0; i < layers.length - 1; i++) {
-                            Drawable tLayers[] = new Drawable[2];
+                            Drawable[] tLayers = new Drawable[2];
                             tLayers[0] = layers[i];
                             tLayers[1] = layers[i + 1];
 
@@ -114,6 +110,7 @@ public class SplashActivity extends AppCompatActivity {
                             try {
                                 Thread.sleep(speedInMs);
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -141,6 +138,7 @@ public class SplashActivity extends AppCompatActivity {
                             try {
                                 Thread.sleep(speedInMs);
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -210,7 +208,7 @@ public class SplashActivity extends AppCompatActivity {
                         // error
                         Log.d("Error.Response", error.toString());
                         mProgress.dismiss();
-                        Intent i = new Intent(SplashActivity.this, IntroductionActivity.class);
+                        Intent i = new Intent(SplashActivity.this, MainActivity.class);
                        // i.putExtra(MainActivity.TUTORIAL,true);
                         startActivity(i);
 
