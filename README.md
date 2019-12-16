@@ -3,6 +3,7 @@
 - [MeetApp](#meetapp)
   - [ScreenShots](#screenshots)
   - [Architecture](#architecture)
+  - [DataBase Server &amp; API**](#database-server-amp-api)
 
 ![logo](forReadMe/logosqaure.png)
 
@@ -35,6 +36,6 @@
 
 ![Architecture](forReadMe/system&#32;diagram.png)
 
-**DataBase Server & API**
+## DataBase Server & API**
 
 [Link to Database Server & API Code](https://github.com/mjosephan2/meetBot/tree/master)
