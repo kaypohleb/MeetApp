@@ -3,7 +3,7 @@
 - [MeetApp](#meetapp)
   - [ScreenShots](#screenshots)
   - [Architecture](#architecture)
-  - [DataBase Server &amp; API**](#database-server-amp-api)
+  - [DataBase Server &amp; API](#database-server-amp-api)
 
 ![logo](forReadMe/logosqaure.png)
 
