@@ -108,19 +108,6 @@ public class InviteActivity extends AppCompatActivity {
         inviteList = Friends.getUser_name();
         adapter = new InviteCardAdapter(inviteList,InviteActivity.this);
         rv.setAdapter(adapter);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String text) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String text) {
-                adapter.getFilter().filter(text);
-                adapter.notifyDataSetChanged();
-                return true;
-            }
-        });
 
         api_setup = true;
 
